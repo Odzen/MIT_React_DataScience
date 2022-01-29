@@ -36,4 +36,4 @@ while second<len(s):
             strang2=s[first]
         first+=1
         second+=1
-print("Longest substring in alphabetical order is:" + strang2)
+print("Longest substring in alphabetical order is: " + strang2)
