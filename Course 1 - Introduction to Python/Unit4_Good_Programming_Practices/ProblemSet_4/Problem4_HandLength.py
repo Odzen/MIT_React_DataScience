@@ -10,7 +10,6 @@ def calculateHandlen(hand):
     hand: dictionary (string int)
     returns: integer
     """
-    # TO DO... <-- Remove this comment when you code this function
     handLength = 0
     # Iterate through letters in current hand
     for letter in hand:
