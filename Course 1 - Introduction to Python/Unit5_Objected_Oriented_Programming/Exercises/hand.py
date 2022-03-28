@@ -82,17 +82,34 @@ class Hand(object):
         word: string
         returns: Boolean (if the word was or was not made)
         """
-        # Your code here
-        raise NotImplementedError()
+        copyHand = self.hand.copy()
+        # Iterate over each letter in the word
+        for letter in word:
+            # Decrement the value for each letter in hand in updatedHand
+            if self.hand.get(letter)!=None:
+                
+                self.hand[letter] -= 1
+                # If the count for a letter is 0, remove it from updatedHand dictionary completely
+                if self.hand[letter] == 0:
+                    del(self.hand[letter])
+            else:
+                self.hand= copyHand
+                return False
+        return True
 
-    
+
 myHand = Hand(7)
+myHand.setDummyHand('aulqqik')
+myHand.update('quail')
 print(myHand)
-print(myHand.calculateLen())
 
-myHand.setDummyHand('aazzmsp')
-print(myHand)
-print(myHand.calculateLen())
+myHand2 = Hand(10)
+myHand2.setDummyHand('ttehehyxpw')
+myHand2.update('teeth')
+print(myHand2)
 
-myHand.update('za')
-print(myHand)
+myHand3 = Hand(9)
+myHand3.setDummyHand('ulplwnhey')
+myHand3.update('plum')
+print(myHand3)
+#ehllnpuwy
