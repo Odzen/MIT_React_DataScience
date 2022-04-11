@@ -53,9 +53,42 @@ def greedy_cow_transport(cows,limit=10):
     A list of lists, with each inner list containing the names of cows
     transported on a particular trip and the overall list containing all the
     trips
+    """ 
+    # Sorting through sorted, and using for with two variables to iterate simultaneously.
+    # The lambda function indicates that we will sort by the value of each item
+    # Only works in Python 3.7+
     """
-    # TODO: Your code here
-    pass
+    cowsCopy =  {k: v for k, v in sorted(cows.items(), key=lambda item: item[1], reverse = True)}
+    while(len(cowsCopy)):
+        trip = []
+        totalCost = 0
+        for key,value in cowsCopy.items():
+            if totalCost + value <= limit:
+                trip.append(key)
+                totalCost+=value
+                
+        #Delete cows selected form the dict
+        for key in trip:
+            del cowsCopy[key]
+        
+        result.append(trip)
+    """
+    
+    # Older python versions
+    trips = []
+    cowsCopy = cows.copy()
+    sortedCows = sorted(cowsCopy.items(), key=lambda x: x[1], reverse = True)
+    while sum(cowsCopy.values()) > 0:
+        ship = []
+        total = 0
+        for cow, value in sortedCows:
+            if cowsCopy[cow] != 0 and value + total <= limit:
+                ship.append(cow)
+                total += value
+                cowsCopy[cow] = 0
+        trips.append(ship)
+    return trips
+
 
 
 # Problem 2
@@ -79,8 +112,36 @@ def brute_force_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
+    # intialize final list of trips
+    trips = []
+    # create power list using helper function, and sort it - shortest first!
+    power_list = sorted(get_partitions(cows), key = len)
+    # Note that this returns a list of names (strings), and we will need to do
+    # dictionary lookup later
+    # Now time to filter the power list:
+    possibilities = []
+    for i in power_list:
+        ship = []
+        for j in i:
+            ship_weights = []
+            for k in j:
+                ship_weights.append(cows[k])
+                #print(ship_weights)
+            ship.append(sum(ship_weights))
+            #print(ship)
+        if all(d <= limit for d in ship):
+            possibilities.append(i)
+    # possibiliies now contains some duplicates, which need to be removed
+    pruned_possibilities = []
+    for k in possibilities:
+        if k not in pruned_possibilities:
+            pruned_possibilities.append(k)
+    # now find the minimum list length:
+    min_list_len = min(map(len, pruned_possibilities))
+    for l in pruned_possibilities:
+        if len(l) == min_list_len:
+            return l
+
 
         
 # Problem 3
@@ -97,8 +158,20 @@ def compare_cow_transport_algorithms():
     Returns:
     Does not return anything.
     """
-    # TODO: Your code here
+    greedy_start = time.time()
+    greedy_results = greedy_cow_transport(cows, limit = 10)
+    greedy_end = time.time()
+    print('Greedy Algorithm time:', greedy_end -greedy_start)
+    brute_force_start = time.time()
+    brute_force_results = brute_force_cow_transport(cows, limit = 10)
+    brute_force_end = time.time()
+    print('Brute force time:', brute_force_end - brute_force_start)
+    print('Greedy Algorithm results:', greedy_results)
+    print('Number of trips returned by Greedy Algorithm:', len(greedy_results))
+    print('Brute Force Algorithm results:', brute_force_results)
+    print('Number of trips returned by Brute Force Algorithm:', len(brute_force_results))
     pass
+    
 
 
 """
@@ -108,10 +181,13 @@ lines to print the result of your problem.
 """
 
 cows = load_cows("ps1_cow_data.txt")
-limit=100
-print(cows)
+cows2 = {"Jesse": 6, "Maybel": 3, "Callie": 2, "Maggie": 5}
+limit=10
+#print(cows)
 
 print(greedy_cow_transport(cows, limit))
-print(brute_force_cow_transport(cows, limit))
+#print(greedy_cow_transport(cows2, limit))
 
+print(brute_force_cow_transport(cows, limit))
+compare_cow_transport_algorithms()
 
